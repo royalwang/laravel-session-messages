@@ -2,9 +2,11 @@
 namespace Tarach\LSM\Message;
 
 use Tarach\LSM\SessionStorage\TStorageAccess;
+use Tarach\LSM\TConfigAccess;
 
 class Collection implements \Iterator, \Countable
 {
+    use TConfigAccess;
     use TStorageAccess;
     
     /**
@@ -18,12 +20,6 @@ class Collection implements \Iterator, \Countable
      * @var int
      */
     private $index = 0;
-    /**
-     * Unique prefix for messages
-     * 
-     * @var string
-     */
-    private $prefix = 'tarach_lsm_';
 
     /**
      * Creates new failure type message saves it and return object handler
@@ -74,7 +70,7 @@ class Collection implements \Iterator, \Countable
      */
     public function message($msg, $type)
     {
-        return Message::createInstance(null, $this)
+        return Message::createInstance(null)
             ->setType($type)
             ->setMessage($msg)
             ->save();
@@ -100,7 +96,7 @@ class Collection implements \Iterator, \Countable
      */
     public function current()
     {
-        return Message::createInstance($this->index(), $this)->load();
+        return Message::createInstance($this->index())->load();
     }
     /**
      * @inheritdoc
@@ -114,7 +110,7 @@ class Collection implements \Iterator, \Countable
      */
     public function key()
     {
-        return $this->getPrefix().$this->index();
+        return $this->getConfig()->getPrefix().$this->index();
     }
     /**
      * Returns numeric index of current item
@@ -157,24 +153,4 @@ class Collection implements \Iterator, \Countable
         }
         return $index < 0 ? false : $index;
     }
-    /**
-     * @return string
-     */
-    public function getPrefix()
-    {
-        return $this->prefix;
-    }
-
-    // setters
-    /**
-     * @param string $prefix
-     * @return $this
-     */
-    public function setPrefix($prefix)
-    {
-        $this->prefix = $prefix;
-        return $this;
-    }
-    
-    
 }

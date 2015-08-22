@@ -3,7 +3,7 @@ namespace Tarach\LSM\Providers;
 
 use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
 
-class SessionMessageServiceProvider extends IlluminateServiceProvider
+class SessionMessageProvider extends IlluminateServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
@@ -19,6 +19,14 @@ class SessionMessageServiceProvider extends IlluminateServiceProvider
      */
     public function register()
     {
+        $this->app->bind(
+            \Tarach\LSM\Message\Collection::IOC_ID,
+            function()
+            {
+                return app(\Tarach\LSM\Message\Collection::class);
+            }
+        );
+        
         $this->app->singleton(
             \Tarach\LSM\SessionStorage\ISessionStorage::IOC_ID,
             function()
@@ -28,10 +36,10 @@ class SessionMessageServiceProvider extends IlluminateServiceProvider
         );
 
         $this->app->singleton(
-            \Tarach\LSM\Message\Collection::IOC_ID,
+            \Tarach\LSM\Config::IOC_ID,
             function()
             {
-                return app(\Tarach\LSM\Message\Collection::class);
+                return app(\Tarach\LSM\Config::class);
             }
         );
     }

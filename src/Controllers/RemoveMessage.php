@@ -5,7 +5,7 @@ class RemoveMessage extends AController
 {
     public function exec($id)
     {
-        $Message = new \Tarach\LSM\Message\Message($id, tlsm_session_message());
+        $Message = new \Tarach\LSM\Message\Message($id);
         
         if($Message->exists())
         {

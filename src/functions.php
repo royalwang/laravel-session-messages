@@ -1,5 +1,5 @@
 <?php
-if(!function_exists('session_message'))
+if(!function_exists('tlsm_messages'))
 {
     /**
      * Access point for session messages
@@ -7,7 +7,7 @@ if(!function_exists('session_message'))
      * @param  string|null $message         Notify 
      * @return \Tarach\LSM\Message\Collection
      */
-    function tlsm_session_message($message = null)
+    function tlsm_messages($message = null)
     {
         // get session message collection
         $SMC = app(\Tarach\LSM\Message\Collection::IOC_ID);

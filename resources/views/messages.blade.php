@@ -1,6 +1,6 @@
-@if(tlsm_session_message()->count() > 0)
+@if(tlsm_messages()->count() > 0)
 <div id="messages">
-    @foreach(tlsm_session_message() as $Message)
+    @foreach(tlsm_messages() as $Message)
     <?php /* @var $Message \Tarach\LSM\Message\Message */ ?>
     <div data-message-index="{{$Message->getIndex()}}" class="{{ $Message->getClasses() }}">
         {{ $Message->getMessage() }}

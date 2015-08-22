@@ -1,8 +1,15 @@
 <?php
 namespace Tarach\LSM\Message;
 
+use Tarach\LSM\Config;
+use Tarach\LSM\SessionStorage\TStorageAccess;
+use Tarach\LSM\TConfigAccess;
+
 class Message
 {
+    use TConfigAccess;
+    use TStorageAccess;
+    
     // types of messages
     /**
      * Message type
@@ -70,40 +77,38 @@ class Message
      * @var int
      */
     private $index;
-    /**
-     * @var Collection
-     */
-    private $Collection;
 
     /**
      * Assignes variables
      * 
-     * @param int|null $index
-     * @param Collection $C
+     * @param   int|null  $index
+     * @param   Config    $Config        Optional when empty Config object from Laravels IoC will be used 
      */
-    public function __construct($index, Collection $C)
+    public function __construct($index = null, Config $Config = null)
     {
         $this->setIndex($index);
-        $this->setCollection($C);
+        if(!is_null($Config))
+        {
+            $this->setConfig($Config);
+        }
     }
 
     /**
      * Creates new instance of itself and returns it
      * 
-     * @param $index
-     * @param Collection $C
+     * @param   int       $index
+     * @param   Config    $Config
      * @return static
      */
-    public static function createInstance($index, Collection $C)
+    public static function createInstance($index, Config $Config = null)
     {
-        return new static($index, $C);
+        return new static($index, $Config);
     }
 
     public function exists()
     {
         $index = $this->getIndex();
-        $Collection = $this->getCollection();
-        return $Collection->getSessionStorage()->has($Collection->getPrefix().$index);
+        return $this->getSessionStorage()->has($this->getConfig()->getPrefix().$index);
     }
     /**
      * Loads message from session
@@ -113,13 +118,12 @@ class Message
     public function load()
     {
         $index = $this->getIndex();
-        $Collection = $this->getCollection();
         if(is_null($index))
         {
             throw new \InvalidArgumentException('Loading session message failed. Index is not set.');
         }
 
-        $this->setData($Collection->getSessionStorage()->get($Collection->getPrefix().$index));
+        $this->setData($this->getSessionStorage()->get($this->getConfig()->getPrefix().$index));
         
         return $this;
     }
@@ -130,17 +134,15 @@ class Message
      */
     public function save()
     {
-        $Collection = $this->getCollection();
-        
         $index = $this->getIndex();
         if(is_null($index))
         {
-            $index = $Collection->getLastIndex();
+            $index = tlsm_messages()->getLastIndex();
             $index = $index === false ? 0 : $index + 1;
         }
         $this->setIndex($index);
         
-        $Collection->getSessionStorage()->set($Collection->getPrefix().$index, $this->getData());
+        $this->getSessionStorage()->set($this->getConfig()->getPrefix().$index, $this->getData());
         
         return $this;
     }
@@ -152,9 +154,43 @@ class Message
     public function remove()
     {
         $index = $this->getIndex();
-        $Collection = $this->getCollection();
-        $Collection->getSessionStorage()->remove($Collection->getPrefix().$index);
+        $this->getSessionStorage()->remove($this->getConfig()->getPrefix().$index);
 
+        return $this;
+    }
+    
+    // aliases
+    /**
+     * Sets method to ::METHOD_PERSIST
+     * equivalent of setMethod(self::METHOD_PERSIST);
+     * 
+     * @return $this
+     */
+    public function persist()
+    {
+        $this->setMethod(self::METHOD_PERSIST);
+        return $this;
+    }
+    /**
+     * Sets method to ::METHOD_FLASH
+     * equivalent of setMethod(self::METHOD_FLASH);
+     * 
+     * @return $this
+     */
+    public function flash()
+    {
+        $this->setMethod(self::METHOD_FLASH);
+        return $this;
+    }
+    /**
+     * Sets method to ::METHOD_REMOVABLE
+     * equivalent of setMethod(self::METHOD_REMOVABLE);
+     *
+     * @return $this
+     */
+    public function removable()
+    {
+        $this->setMethod(self::METHOD_REMOVABLE);
         return $this;
     }
     
@@ -196,13 +232,6 @@ class Message
         return $this->data[self::DATA_METHOD];
     }
     /**
-     * @return Collection
-     */
-    public function getCollection()
-    {
-        return $this->Collection;
-    }
-    /**
      * Returns numeric id of message
      * 
      * @return int|null
@@ -222,6 +251,21 @@ class Message
     }
 
     // setters
+    /**
+     * Appends new CSS classes
+     * 
+     * @param string|array $class
+     * @return $this
+     */
+    public function addClasses($class)
+    {
+        if(is_array($class))
+        {
+            $class = implode(' ', $class);
+        }
+        $this->setClasses($this->getClasses().' '.$class);
+        return $this;
+    }
     /**
      * @see getClasses()
      * 
@@ -271,15 +315,6 @@ class Message
         return $this;
     }
     /**
-     * @param Collection $C
-     * @return $this
-     */
-    public function setCollection(Collection $C)
-    {
-        $this->Collection = $C;
-        return $this;
-    }
-    /**
      * @see getIndex()
      * 
      * @param int $index
@@ -309,6 +344,4 @@ class Message
         $this->data[self::DATA_TYPE] = $type;
         return $this;
     }
-
-
 }
