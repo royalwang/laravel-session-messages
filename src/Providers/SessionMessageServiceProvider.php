@@ -65,7 +65,7 @@ class SessionMessageServiceProvider extends IlluminateServiceProvider
         
         if(file_exists($root_resource_dir))
         {
-            $views_dir = $root_resource_dir;
+            $views_dir = $root_resource_dir.'/views';
         } else {
             $views_dir = realpath(__DIR__ . '/../../resources/views');
         }
