@@ -1,0 +1,114 @@
+.msg-box {
+    display: block;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 0 0.5em 0;
+    padding: 0.4em 40px 0.4em 0.8em;
+    transition: opacity 300ms ease-out;
+    border-radius: 15px;
+
+    font-size: 1em;
+    font-weight: 400;
+    font-family: "Comic Sans MS",cursive,sans-serif;
+    text-shadow: 
+        -1px -1px 0 #333,
+        1px -1px 0 #333,
+        -1px 1px 0 #333,
+        1px 1px 0 #333;
+}
+
+.msg-box ul {
+    list-style: none;
+    margin:0;
+}
+
+.msg-box .close {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    display: block;
+    width: auto;
+    height: 34px;
+    margin: 0;
+    padding: 0 9px 0 10px;
+    
+    opacity: 1;
+    font-size: 18px;
+    color: #333;
+    border-radius: 12px;
+    line-height: 28px;
+}
+
+.msg-box .close span {
+    font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+    text-shadow: none;
+    opacity: 0.3;
+    font-weight: 800;
+}
+
+/* --------------------- */
+/* --- alert success --- */
+/* ------- green ------- */
+/* --------------------- */
+.msg-box.success {
+    background: #8CCC1F;
+    border: 2px solid #699917;
+}
+.msg-box.success .close {
+    background: #84BF1D;
+    border: 2px solid rgba(38,140,11,0.2);
+}
+.msg-box.success .close:hover {
+    background: #73A619;
+}
+
+/* --------------------- */
+/* --- alert warning --- */
+/* ------ orange ------- */
+/* --------------------- */
+.msg-box.warning {
+    background-color: #f08a24;
+    border: 2px solid #de770f;
+    color: #FFF;
+}
+.msg-box.warning .close {
+    background: #E38222;
+    border: 2px solid rgba(140,76,11,0.2);
+}
+.msg-box.warning .close:hover {
+    background: #C9731E;
+}
+/* -------------------- */
+/* --- alert notify --- */
+/* ------- blue ------- */
+/* -------------------- */
+.msg-box.notify {
+    background-color: #008CBA;
+    border: 2px solid #0078a0;
+    color: #FFF;
+}
+.msg-box.notify .close {
+    background: #0083AD;
+    border: 2px solid rgba(11,108,140,0.2);
+}
+.msg-box.notify .close:hover {
+    background: #007094;
+}
+
+/* --------------------- */
+/* --- alert failure --- */
+/* -------- red -------- */
+/* --------------------- */
+.msg-box.failure {
+    background-color: #f04124;
+    border: 2px solid #de2d0f;
+    color: #FFF;
+}
+.msg-box.failure .close {
+    background: #E33D22;
+    border: 2px solid rgba(140,28,11,0.2);
+}
+.msg-box.failure .close:hover {
+    background: #C9361E;
+}

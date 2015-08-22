@@ -1,0 +1,26 @@
+{
+    "name": "tarach/laravel-session-messages",
+    "description": "Manager for session messages in laravel 5",
+    "keywords": ["laravel", "session", "messages"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sebastian Tarach",
+            "email": "sebastian@tarach.net"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/session": "~5.0",
+        "illuminate/support": "~5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tarach\\LSM\\": "src/"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    },
+    "minimum-stability": "stable"
+}
