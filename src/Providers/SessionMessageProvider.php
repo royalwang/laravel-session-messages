@@ -51,38 +51,32 @@ class SessionMessageProvider extends IlluminateServiceProvider
      */
     public function boot()
     {
-        // if `php artisan vendor:publish` was used load "routes" from <app>/Http/tlsm.routes.php
-        // instead of loading from <root>/vendor/<vendor>/<project>/config/routes.php
-        $app_routes = app_path('Http/tlsm.routes.php');
-        $local_routes = __DIR__ . '/../../config/routes.php';
-        
-        if(!$this->app->routesAreCached())
+        $name = 'tlsm';
+
+        // if `php artisan vendor:publish` was used load resources from $app_res_dir
+        // including views, config and routes otherwise load from $tlum_res_dir 
+        $app_res_dir = base_path('resources/vendor/'.$name);
+        $tlum_res_dir = realpath(__DIR__ . '/../../resources');
+
+        if(file_exists($app_res_dir))
         {
-            if(file_exists($app_routes))
-            {
-                $routes_file = $app_routes;
-            } else {
-                $routes_file = $local_routes;
-            }
-            include $routes_file;
+            $resource_dir = $app_res_dir;
+        } else {
+            $resource_dir = $tlum_res_dir;
         }
 
-        // if `php artisan vendor:publish` was used load "views" from <root>/resources/vendor/tlsm
-        // directory instead of loading from <root>/vendor/<vendor>/<project>/resources
-        $root_resource_dir = base_path('resources/vendor/tlsm');
-        
-        if(file_exists($root_resource_dir))
+        // assign views prefix
+        $this->loadViewsFrom($resource_dir.'/views', $name);
+
+        // include routes
+        if(!$this->app->routesAreCached())
         {
-            $views_dir = $root_resource_dir.'/views';
-        } else {
-            $views_dir = realpath(__DIR__ . '/../../resources/views');
+            include $resource_dir . '/config/routes.php';
         }
-        $this->loadViewsFrom($views_dir, 'tlsm');
-        
+
         // publish all resources
         $this->publishes([
-            $local_routes => $app_routes,
-            __DIR__ . '/../../resources' => $root_resource_dir,
+            $tlum_res_dir => $app_res_dir
         ]);
     }
 }
